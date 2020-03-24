@@ -8,7 +8,7 @@ library(purrr)
 bett1 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   for (i in 1:times)
   {
@@ -32,7 +32,7 @@ bett1 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2
 bett1n = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   win = rbernoulli(times, 1/(odd+1))
   for (i in 1:times)
@@ -56,7 +56,7 @@ bett1n = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =
 bett2 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   for (i in 1:times)
   {
@@ -107,5 +107,6 @@ for (i in 21: 40){
 
 # When running out of money
 x = bett_lt(no.simu =  1000000, original_amount=100, times=100, bet=10, payout=1, odd=10/9, m =1)
+
 
 
