@@ -1,4 +1,21 @@
+---
+title: "Betting"
 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Matingale
+
+- If lose, double the bet
+- If win, get back to the original bet
+
+### 
+
+```{r, echo=FALSE}
 library(ggplot2)
 library(purrr)
 
@@ -8,7 +25,7 @@ library(purrr)
 bett1 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   for (i in 1:times)
   {
@@ -32,7 +49,7 @@ bett1 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2
 bett1n = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   win = rbernoulli(times, 1/(odd+1))
   for (i in 1:times)
@@ -56,7 +73,7 @@ bett1n = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =
 bett2 = function(original_amount=1000, times=50, bet=10, payout=35, odd=37, m =2)
 {
   amount_series = c()
-  amount_series[1] = amount
+  amount_series[1] = original_amount
   new_bet = bet
   for (i in 1:times)
   {
@@ -90,22 +107,21 @@ bett_lt = function(no.simu =  1000, original_amount=1000, times=50, bet=10, payo
   
   for (i in 1:no.simu)
   {
-    amount_series_lt[,i] = bett1n(original_amount=original_amount, times=times, bet=bet, payout=payout, odd=odd, m =m)
+    amount_series_lt[,i] = bett1n(amount=amount, times=times, bet=bet, payout=payout, odd=odd, m =m)
   }
   
   amount_series_lt_expected = apply(amount_series_lt,1, mean)
   return(amount_series_lt_expected)
 }
+```
 
+#### Simulation 1
 
-# Running some simulations
-for (i in 21: 40){
-  print(i)
-  x = bett_lt(no.simu =  1000000, original_amount=100, times=100, bet=10, payout=1, odd=10/9, m =1)
-  ggsave(paste0(i,'.png'), qplot(c(1:length(x)),x, xlab = 'Number of Plays'))
-}
+Betting a number with odd 37:1 and payout 35:1
 
-# When running out of money
-x = bett_lt(no.simu =  1000000, original_amount=100, times=100, bet=10, payout=1, odd=10/9, m =1)
+```{r}
+x = bett1n(original_amount=1000, times=50, bet=10, payout=35, odd=37, m=2)
+qplot(c(1:length(x)),x, xlab='Number of Plays')
+```
 
 
