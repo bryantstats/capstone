@@ -1,3 +1,3 @@
 # capstone
 
-# Betting 
+## [Betting](betting.html)

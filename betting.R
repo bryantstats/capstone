@@ -105,8 +105,7 @@ for (i in 21: 40){
   ggsave(paste0(i,'.png'), qplot(c(1:length(x)),x, xlab = 'Number of Plays'))
 }
 
-# When running out of money
-x = bett_lt(no.simu =  1000000, original_amount=100, times=100, bet=10, payout=1, odd=10/9, m =1)
-
+x = bett_lt(no.simu =  1000000, original_amount=1000, times=1000, bet=10, payout=35, odd=37, m=2)
+qplot(c(1:length(x)),x, xlab = 'Number of Plays')
 
 
