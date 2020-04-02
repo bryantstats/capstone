@@ -21,9 +21,9 @@ df<-data.frame(infile)%>%
   select(-c(Cohort, First, Last, TargetGPA, ID, GPA, major, sat, College, race))%>%
   drop_na
 df$target <- factor(df$Target10p)
+
 df<-df%>%
-  select
-t(-c(Target10p))%>%
+  select t(-c(Target10p))%>%
   # mutate(race=recode(race, '6 Pacific Isl'='Other', '5 NativeAm'='Other','9 Unkn US'='Other'))%>%
   filter(degree!="a NDG, UG")%>%
   filter(midtermgpa!="#N/A")%>%
