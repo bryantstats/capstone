@@ -1,0 +1,130 @@
+---
+title: "Fifa Data"
+author: "Michael LaVallee"
+date: "2/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(tidyverse)
+library(purrr)
+library(caret)
+library(rpart)
+library(rattle)
+library(ranger)
+library(stats)
+options(warn=-1)
+
+Fifa_19 = read_csv("players_19.csv")
+
+Fifa_20 = read_csv("players_20.csv")
+
+set.seed(1234)
+
+p=.3
+
+splitIndex = createDataPartition(Fifa_19$overall, p=p, list = FALSE)
+train= Fifa_19[splitIndex,]
+
+splitIndex = createDataPartition(Fifa_20$overall, p=p, list = FALSE)
+test = Fifa_20[-splitIndex,]
+
+# Some numeric variables are recognized as character. 
+# This is to correct the type of some variables. 
+train = train %>% mutate_if(is.character, as.numeric)
+
+# Remove NA
+train = train[complete.cases(train),]
+
+# Do the same for test
+test = test %>% mutate_if(is.character, as.numeric)
+test = test[complete.cases(test),]
+```
+
+
+```{r}
+
+model = ranger(overall ~., data = train, mtry = 1, num.trees = 10)
+
+pred3  = predict(model, data = test)$overall 
+
+pred3
+model
+
+```
+
+```{r}
+library(caret)
+
+#want to make one nerual network not sure how to go about it
+
+myGrid = expand.grid(size = c(3, 5))
+
+model <- train(overall~.,data = train, method = "mlp", tuneGrid = myGrid)
+
+pred  = predict(model, test)
+
+# Show performance of the model on test data
+postResample(pred = pred, obs = test$overall)
+```
+
+```{r}
+
+# splirtule can be "variance", "extratrees", "maxstat" 
+
+myGrid = expand.grid(mtry = c(1:2), splitrule='variance',
+                     min.node.size = c(1:2))
+
+model <- train(overall~.,data = train, method = "ranger", tuneGrid = myGrid)
+# Plot tuning parameters
+plot(model)
+
+
+pred  = predict(model, test)
+
+# Show performance of the model on test data
+postResample(pred = pred, obs = test$overall)
+
+```
+
+```{r}
+myGrid = expand.grid(n.trees = c(1:2)
+            , interaction.depth = c(1:2), shrinkage =c(1:2) 
+            , n.minobsinnode = c(1:2)  )
+
+model= train(overall~.,data=train, method = "gbm",tuneGrid = myGrid)
+# Plot tuning parameters
+plot(model)
+
+
+pred = predict(model,test)
+postResample(pred = pred, obs = test$overall)
+```
+
+```{r}
+library(lars)
+
+myGrid = expand.grid(alpha = c(1:10)/10, lambda = c(1:10)/10)
+
+model= train(overall~.,data=train, method = "glmnet")
+
+# Plot tuning parameters
+plot(model)
+
+pred = predict(model,test)
+postResample(pred = pred, obs = test$overall)
+```
+
+
+
+
